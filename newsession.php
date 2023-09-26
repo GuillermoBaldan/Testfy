@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $password = "";
     $dbname = "TestfyDB"; // Asegúrate de que sea el nombre correcto de tu base de datos
 
-    $conn = new mysqli($servername, $username, $password);
+    $conn = new mysqli($servername, $username, $password, $dbname); // Selecciona la base de datos
 
     if ($conn->connect_error) {
         die("Error de conexión: " . $conn->connect_error);

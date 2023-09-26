@@ -23,7 +23,7 @@ if ($conn->query($sqlCreateDB) === TRUE) {
         ID INT AUTO_INCREMENT PRIMARY KEY,
         Nombre VARCHAR(255) NOT NULL,
         Contrasena VARCHAR(255) NOT NULL,
-        CorreoElectronico VARCHAR(255) NOT NULL
+        email VARCHAR(255) NOT NULL
     )";
 
     if ($conn->query($sqlCreateUsuariosTable) === TRUE) {

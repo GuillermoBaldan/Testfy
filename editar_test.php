@@ -1,11 +1,6 @@
 <?php
-echo '<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio</title>
-    <style>
+// Establecer estilo en línea
+echo '<style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
@@ -46,16 +41,49 @@ echo '<!DOCTYPE html>
         .option-button:hover {
             background-color: #0056b3;
         }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Editar Test</h1>
-        <div class="options-container">
-            <a href="inicio.html" class="option-button">Volver a Inicio</a>
-            <a href="hacer_test.php" class="option-button">Crear Test</a>
-        </div>
-    </div>
-</body>
-</html>';
+    </style>';
+
+// Conexión a la base de datos (reemplaza con tus propias credenciales)
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "TestfyDB"; // Asegúrate de que sea el nombre correcto de tu base de datos
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Error de conexión: " . $conn->connect_error);
+}
+
+// Consulta SQL para verificar si hay tests en la base de datos
+$sql = "SELECT COUNT(*) as testCount FROM Tests";
+
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $testCount = $row["testCount"];
+
+    if ($testCount > 0) {
+        // Hay tests disponibles, redirige a la página de edición
+        header("Location: editar_test.html");
+        exit();
+    } else {
+        // No hay tests disponibles, muestra una notificación
+        echo '<body>
+                <div class="container">
+                    <h1>No hay ningún test creado</h1>
+                    <div class="options-container">
+                        <a href="inicio.html" class="option-button">Volver a Inicio</a>
+                        <a href="crear_test.php" class="option-button">Crear Test</a>
+                    </div>
+                </div>
+              </body>';
+    }
+} else {
+    // Error al verificar los tests, muestra un mensaje de error
+    echo "Error al verificar los tests. <a href='crear_test.html'>Crear un nuevo test</a>";
+}
+
+$conn->close();
 ?>

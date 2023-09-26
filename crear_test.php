@@ -53,7 +53,7 @@ echo '<!DOCTYPE html>
         <h1>Hacer Test</h1>
         <div class="options-container">
             <a href="inicio.html" class="option-button">Volver a Inicio</a>
-            <a href="hacer_test.php" class="option-button">Crear Test</a>
+            <a href="crear_test.php" class="option-button">Crear Test</a>
         </div>
     </div>
 </body>

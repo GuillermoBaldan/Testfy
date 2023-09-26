@@ -20,23 +20,31 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = $_POST["email"];
     $password = $_POST["password"];
 
-    // Consulta SQL para verificar las credenciales
-    $sql = "SELECT id, nombre FROM usuarios WHERE email = '$email' AND contrasena = '$password'";
+    // Consulta SQL para obtener la contraseña hasheada del usuario
+    $sql = "SELECT id, nombre, contrasena FROM usuarios WHERE email = '$email'";
 
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
-        // Las credenciales son válidas, inicia una sesión
         $row = $result->fetch_assoc();
-        $_SESSION["usuario_id"] = $row["id"];
-        $_SESSION["usuario_nombre"] = $row["nombre"];
+        $hashedPassword = $row["contrasena"];
 
-        // Redirige al usuario a una página de inicio de sesión exitosa o a donde desees
-        header("Location: inicio.php");
-        exit();
+        // Verificar la contraseña hasheada
+        if (password_verify($password, $hashedPassword)) {
+            // Las credenciales son válidas, inicia una sesión
+            $_SESSION["usuario_id"] = $row["id"];
+            $_SESSION["usuario_nombre"] = $row["nombre"];
+
+            // Redirige al usuario a una página de inicio de sesión exitosa o a donde desees
+            header("Location: inicio.html");
+            exit();
+        } else {
+            // Credenciales incorrectas, muestra un mensaje de error
+            echo "Credenciales incorrectas. <a href='index.html'>Regresar</a>";
+        }
     } else {
-        // Credenciales incorrectas, muestra un mensaje de error
-        echo "Credenciales incorrectas. <a href='index.html'>Regresar</a>";
+        // Usuario no encontrado, muestra un mensaje de error
+        echo "Usuario no encontrado. <a href='index.html'>Regresar</a>";
     }
 
     $conn->close();

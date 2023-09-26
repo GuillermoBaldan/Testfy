@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+<?php
+echo '<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -49,13 +50,12 @@
 </head>
 <body>
     <div class="container">
-        <h1>Inicio</h1>
+        <h1>Editar Test</h1>
         <div class="options-container">
-            <a href="hacer_test.php" class="option-button">Hacer un test</a>
-            <a href="crear_test.html" class="option-button">Crear un nuevo test</a>
-            <!-- Enlace al script PHP "crear_test.php" cuando se pulsa "Hacer un test" -->
-            <a href="editar_test.php" class="option-button">Editar Test</a>
+            <a href="inicio.html" class="option-button">Volver a Inicio</a>
+            <a href="hacer_test.php" class="option-button">Crear Test</a>
         </div>
     </div>
 </body>
-</html>
+</html>';
+?>

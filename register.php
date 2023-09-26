@@ -10,40 +10,63 @@ if ($conn->connect_error) {
     die("Error de conexión: " . $conn->connect_error);
 }
 
-// Verificar si la base de datos TestfyDB existe
-$sql = "CREATE DATABASE IF NOT EXISTS TestfyDB";
-if ($conn->query($sql) === TRUE) {
-    // Cambiar a la base de datos TestfyDB
-    $conn->select_db("TestfyDB");
-    
-    // Crear la tabla usuarios si no existe
-    $createTableSQL = "CREATE TABLE IF NOT EXISTS usuarios (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        nombre VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL,
-        contrasena VARCHAR(255) NOT NULL
-    )";
-    
-    if ($conn->query($createTableSQL) === TRUE) {
-        // Obtener datos del formulario
-        $nombre = $_POST["username"];
-        $email = $_POST["email"];
-        $contrasena = password_hash($_POST["password"], PASSWORD_DEFAULT); // Hashear la contraseña
-        
-        // Insertar datos en la tabla usuarios
-        $insertSQL = "INSERT INTO usuarios (nombre, email, contrasena) VALUES ('$nombre', '$email', '$contrasena')";
-        
-        if ($conn->query($insertSQL) === TRUE) {
-            echo "Registro exitoso. <a href='login.html'>Inicia sesión</a>";
-        } else {
-            echo "Error al registrar el usuario: " . $conn->error;
-        }
-    } else {
-        echo "Error al crear la tabla usuarios: " . $conn->error;
-    }
-    
-    $conn->close();
+// Crear la base de datos TestfyDB si no existe
+$sqlCreateDB = "CREATE DATABASE IF NOT EXISTS TestfyDB";
+if ($conn->query($sqlCreateDB) === TRUE) {
+    echo "Base de datos TestfyDB creada con éxito.<br>";
 } else {
     echo "Error al crear la base de datos: " . $conn->error;
 }
+
+// Cambiar a la base de datos TestfyDB
+$conn->select_db("TestfyDB");
+
+// Crear la tabla Usuarios
+$sqlCreateUsuariosTable = "CREATE TABLE IF NOT EXISTS Usuarios (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre VARCHAR(255) NOT NULL,
+    Contrasena VARCHAR(255) NOT NULL,
+    CorreoElectronico VARCHAR(255) NOT NULL
+)";
+
+if ($conn->query($sqlCreateUsuariosTable) === TRUE) {
+    echo "Tabla Usuarios creada con éxito.<br>";
+} else {
+    echo "Error al crear la tabla Usuarios: " . $conn->error;
+}
+
+// Crear la tabla Tests
+$sqlCreateTestsTable = "CREATE TABLE IF NOT EXISTS Tests (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    Titulo VARCHAR(255) NOT NULL,
+    Descripcion TEXT,
+    FechaCreacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UsuarioID INT,
+    FOREIGN KEY (UsuarioID) REFERENCES Usuarios(ID)
+)";
+
+if ($conn->query($sqlCreateTestsTable) === TRUE) {
+    echo "Tabla Tests creada con éxito.<br>";
+} else {
+    echo "Error al crear la tabla Tests: " . $conn->error;
+}
+
+// Crear la tabla PreguntasRespuestas
+$sqlCreatePreguntasRespuestasTable = "CREATE TABLE IF NOT EXISTS PreguntasRespuestas (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    EnunciadoPregunta TEXT,
+    EnunciadoRespuesta TEXT,
+    FechaUltimoAcierto TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    TiempoDelta INT,
+    TestID INT,
+    FOREIGN KEY (TestID) REFERENCES Tests(ID)
+)";
+
+if ($conn->query($sqlCreatePreguntasRespuestasTable) === TRUE) {
+    echo "Tabla PreguntasRespuestas creada con éxito.<br>";
+} else {
+    echo "Error al crear la tabla PreguntasRespuestas: " . $conn->error;
+}
+
+$conn->close();
 ?>

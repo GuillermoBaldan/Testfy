@@ -10,10 +10,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $password = "";
     $dbname = "TestfyDB"; // Asegúrate de que sea el nombre correcto de tu base de datos
 
-    $conn = new mysqli($servername, $username, $password, $dbname);
+    $conn = new mysqli($servername, $username, $password);
 
     if ($conn->connect_error) {
         die("Error de conexión: " . $conn->connect_error);
+    }
+
+    // Verificar si la base de datos TestfyDB existe
+    $sqlCheckDB = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$dbname'";
+    $resultCheckDB = $conn->query($sqlCheckDB);
+
+    if ($resultCheckDB->num_rows == 0) {
+        // La base de datos no existe, muestra un mensaje de error
+        echo "La base de datos no existe. <a href='index.html'>Regresar</a>";
+        exit();
     }
 
     // Obtener datos del formulario
